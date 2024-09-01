@@ -1,6 +1,7 @@
 import { atomWithStorage } from "jotai/utils";
+import { z } from "zod";
 
-// import {  } from "./submit-handler"
+import { studentStudies } from "./submit-handler";
 
 interface IStudentIdentity {
   nim: string | null;
@@ -11,7 +12,7 @@ interface IStudentIdentity {
 }
 
 interface IStudies {
-  studies: null;
+  studies: z.infer<typeof studentStudies> | null;
 }
 
 export const krsDataAtom = atomWithStorage<IStudentIdentity & IStudies>(

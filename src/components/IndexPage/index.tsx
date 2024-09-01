@@ -9,7 +9,7 @@ export function IndexPage() {
 		krsData.name &&
 		krsData.major &&
 		krsData.faculty &&
-		krsData.generation) return (
+		krsData.generation && krsData.studies) return (
 			<>Ada datanya cuy</>
 		)
 
