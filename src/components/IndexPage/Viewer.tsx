@@ -1,0 +1,168 @@
+import type { KRSType } from "@/utils/atom";
+import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
+import { DateTime } from "luxon";
+import { useMemo } from "react";
+
+type TProps = { data: NonNullable<KRSType> };
+
+const getCurrentDate = (dayIndex: number, isNextWeek: boolean) => {
+  const time = DateTime.now()
+    .plus({ weeks: isNextWeek ? 1 : 0 })
+    .startOf("week")
+    .plus({
+      days: dayIndex,
+    })
+    .setLocale("id-ID");
+
+  return time.toLocaleString(DateTime.DATE_FULL);
+};
+
+export function Viewer({ data }: TProps) {
+  const isNextWeek = useMemo(() => {
+    const lastDay = data.studies!.at(data.studies!.length - 1);
+
+    const [hour, minute] = lastDay!.endsAt.split(":");
+
+    return (
+      DateTime.now()
+        .startOf("week")
+        .plus({ days: lastDay?.dayIndex })
+        .set({
+          hour: parseInt(hour),
+          minute: parseInt(minute),
+        }) <= DateTime.now().setZone()
+    );
+  }, []);
+
+  return (
+    <>
+      <h1 className="text-center scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+        UNJ Timetable
+      </h1>
+
+      <section className="space-y-1.5 w-full md:w-8/9">
+        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+          Identitas Diri
+        </h4>
+
+        <div className="border rounded-lg">
+          <div className="relative w-full overflow-auto">
+            <table className="w-full table-auto">
+              <tbody>
+                <tr className="bg-neutral-50 dark:bg-neutral-900 rounded-tr-lg">
+                  <td className="bg-lime-400 dark:bg-lime-700 rounded-tl-lg px-4 py-3 font-medium w-1/4">
+                    Nama
+                  </td>
+                  <td className="px-4 py-3 border-b rounded-tr-lg">
+                    {data.name}
+                  </td>
+                </tr>
+                <tr className="bg-neutral-50 dark:bg-neutral-900">
+                  <td className="bg-lime-400 dark:bg-lime-700 px-4 py-3 font-medium w-1/4">
+                    Prodi
+                  </td>
+                  <td className="px-4 py-3 border-b">{data.major}</td>
+                </tr>
+                <tr className="bg-neutral-50 dark:bg-neutral-900">
+                  <td className="bg-lime-400 dark:bg-lime-700 px-4 py-3 font-medium w-1/4">
+                    Fakultas
+                  </td>
+                  <td className="px-4 py-3 border-b">{data.faculty}</td>
+                </tr>
+                <tr className="bg-neutral-50 dark:bg-neutral-900">
+                  <td className="bg-lime-400 dark:bg-lime-700 px-4 py-3 font-medium w-1/4">
+                    NIM
+                  </td>
+                  <td className="px-4 py-3 border-b">{data.nim}</td>
+                </tr>
+                <tr className="bg-neutral-50 dark:bg-neutral-900 rounded-br-lg">
+                  <td className="bg-lime-400 dark:bg-lime-700 rounded-bl-lg px-4 py-3 font-medium w-1/4">
+                    Angkatan
+                  </td>
+                  <td className="px-4 py-3 rounded-br-lg">{data.generation}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section className="space-y-1.5 w-full">
+        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+          Jadwal Perkuliahan
+        </h4>
+
+        <main className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-24 justify-center">
+          {data.studies?.map((study) => (
+            <Card
+              key={study.dayIndex}
+              id={`day-${study.dayIndex}`}
+              className="w-full dark:border-sm dark:bg-neutral-900 dark:border-neutral-900"
+            >
+              <CardHeader>
+                <CardTitle className="text-xl">
+                  {study.day},{" "}
+                  <span className="font-normal">
+                    {getCurrentDate(study.dayIndex, isNextWeek)}
+                  </span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="px-2">
+                <table className="table-auto w-full">
+                  <thead className="bg-blue-600 dark:bg-blue-800 text-gray-100 text-lg">
+                    <tr className="h-10">
+                      <th className="text-start pl-3">JAM</th>
+                      <th className="text-center">Matkul</th>
+                      <th className="text-center">Lokasi</th>
+                      <th className="text-end pr-3">Waktu</th>
+                    </tr>
+                  </thead>
+                  <tbody className="gap-5">
+                    {study.subjects.map((s) => (
+                      <tr
+                        key={s.time.round}
+                        className="light:even:bg-zinc-800 odd:bg-slate-100 dark:even-zinc-900 dark:odd:bg-slate-900 *:py-3"
+                      >
+                        <td className="text-center font-mono w-[5%]">
+                          {s.time.round}
+                        </td>
+
+                        <td className="w-[25%] md:w-fit text-center">
+                          {s.subject}
+                        </td>
+
+                        <td className="text-center">
+                          {s.location.building !== null &&
+                          s.location.roomNumber !== null ? (
+                            <div className="flex flex-col py-2">
+                              <b>{s.location.building}</b>
+                              <span className="font-mono">
+                                {s.location.roomNumber}
+                              </span>
+                            </div>
+                          ) : (
+                            "DARING"
+                          )}
+                        </td>
+
+                        <td className="pr-2 w-[5%]">
+                          <div className="flex flex-col items-end">
+                            <span className="border-b border-neutral-800 dark:border-neutral-400">
+                              {s.time.startedAt.replace(":00", "")}
+                            </span>
+
+                            <span>{s.time.endedAt.replace(":00", "")}</span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </CardContent>
+            </Card>
+          ))}
+        </main>
+      </section>
+    </>
+  );
+}

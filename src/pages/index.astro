@@ -1,8 +1,18 @@
 ---
-import Layout from '@layouts/Layout.astro';
-import { IndexPage } from "@components/IndexPage"
+import Layout from '@/layouts/Layout.astro';
+import { IndexPage } from "@/components/IndexPage"
+import { Toaster } from "@/components/ui/sonner"
+import { ModeToggle } from "@/components/ui/mode-toggle"
 ---
 
-<Layout title="Welcome to Astro.">
-	<IndexPage client:idle />
+<Layout title="UNJ Timetable | Mengubah KRS menjadi jadwal yang rapih">
+	<div class="fixed bottom-5 right-5">
+        <ModeToggle align="center" client:load />
+	</div>
+
+	<div class="px-5 md:px-8 pt-6 flex flex-col items-center justify-center gap-5">
+		<IndexPage client:idle />
+	</div>
+
+	<Toaster  client:load />
 </Layout>

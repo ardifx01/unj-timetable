@@ -1,17 +1,20 @@
 import { useAtomValue } from "jotai";
 import { NoData } from "./NoData";
-import { krsDataAtom } from "@utils/atom";
+import { krsDataAtom } from "@/utils/atom";
+import { Viewer } from "./Viewer";
 
 export function IndexPage() {
-	const krsData = useAtomValue(krsDataAtom);
+  const krsData = useAtomValue(krsDataAtom);
 
-	if (krsData.nim &&
-		krsData.name &&
-		krsData.major &&
-		krsData.faculty &&
-		krsData.generation && krsData.studies) return (
-			<>Ada datanya cuy</>
-		)
+  if (
+    krsData.nim &&
+    krsData.name &&
+    krsData.major &&
+    krsData.faculty &&
+    krsData.generation &&
+    krsData.studies
+  )
+    return <Viewer data={krsData} />;
 
-	return <NoData />
+  return <NoData />;
 }

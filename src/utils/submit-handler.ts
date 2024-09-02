@@ -1,7 +1,10 @@
 import * as cheerio from "cheerio";
 import PostalMime from "postal-mime";
+import { toast } from "sonner";
 
 import { z } from "zod";
+
+const CURRENT_SEMESTER = 121;
 
 const headerScheme = z.object({
   "snapshot-content-location": z.string().url(),
@@ -18,11 +21,11 @@ const studentInfoScheme = z.object({
 
 export const studentStudies = z.array(
   z.object({
+    dayIndex: z.number(),
     day: z.string(),
     subjects: z.array(
       z.object({
         subject: z.string(),
-        credits: z.string(),
         lecturer: z.string(),
         time: z.object({
           round: z.string(),
@@ -35,11 +38,19 @@ export const studentStudies = z.array(
         }),
       })
     ),
+    startsAt: z.string(),
+    endsAt: z.string(),
   })
 );
 
 const timeToNumber = (t: string) => parseInt(t.replaceAll(":", ""));
-const DAYTIME_REF = ["Senin", "Selasa", "Rabu", "Kamis", "Jum'at"];
+const DAYTIME_REF = [
+  { label: "Senin", idx: 0 },
+  { label: "Selasa", idx: 1 },
+  { label: "Rabu", idx: 2 },
+  { label: "Kamis", idx: 3 },
+  { label: "Jum'at", idx: 4 },
+];
 
 const trimSplitAndTrim = (content: string) =>
   content
@@ -49,7 +60,6 @@ const trimSplitAndTrim = (content: string) =>
 
 interface IGreedArray {
   subject: string;
-  credits: string;
   lecturer: string;
   location: {
     building: string | null;
@@ -85,18 +95,26 @@ export const onSubmit =
 
     const validateHeader = await headerScheme.safeParseAsync(objectifyHeader);
 
-    if (!validateHeader.success) return alert("Format file tidak sesuai!");
+    if (!validateHeader.success)
+      return toast.error("Gagal membaca file.", {
+        description: "Format file tidak sesuai!",
+      });
 
     if (
       validateHeader.data["snapshot-content-location"] !==
         "https://siakad.unj.ac.id/index.php/krs" ||
       validateHeader.data.subject !== "Siakad UNJ"
     )
-      return alert(
-        "Informasi KRS yang dicantukmkan tidak berasal dari Siakad UNJ!"
-      );
+      return toast.error("Gagal membaca file.", {
+        description:
+          "Informasi KRS yang dicantukmkan tidak berasal dari Siakad UNJ!",
+      });
 
-    if (!content.html) return;
+    if (!content.html)
+      return toast.error("File sudah dimodifikasi.", {
+        description:
+          "File yang anda pilih tidak memiliki konten html, mohon unduh kembali dari web siakad.",
+      });
 
     const $ = cheerio.load(content.html);
 
@@ -119,44 +137,53 @@ export const onSubmit =
     });
 
     if (!studentInfoValidation.success)
-      return alert("Informasi anda kurang sesuai!");
+      return toast.error("Informasi mahasiswa kosong", {
+        description:
+          "File yang anda pilih memiliki masalah dengan identitas yang tidak tercantum. Mohon cek kembali web siakad dan file unduhan anda.",
+      });
 
     const truthTable = $("table#dynamic-table");
 
     if (truthTable.length === 0)
-      return alert(
-        "Anda belum memilih data semester! Pilih semester terlebih dahulu dan ulangi proses unduhnya."
-      );
+      return toast.error("Tidak ada tabel mata kuliah.", {
+        description:
+          "Anda belum memilih data semester! Pilih semester terlebih dahulu dan ulangi proses unduhnya.",
+      });
 
     const rawSemesterIndicator = $(
       "#showingData .widget-header .widget-title"
     ).text();
 
     if (!rawSemesterIndicator.startsWith("Daftar Rencana Studi Semester : "))
-      alert(
-        "Tidak dapat memastikan informasi semester, mohon untuk mengunduh informasi KRS anda kembali."
-      );
+      return toast.error("Tidak dapat memastikan informasi semester", {
+        description:
+          "Mohon untuk mengunduh informasi KRS anda kembali. Jika masih bermasalah, hubungi pembuat web ini.",
+      });
+
     const currentDataSemester = parseInt(
       rawSemesterIndicator
         .replace("Daftar Rencana Studi Semester : ", "")
         .trim()
     );
 
-    if (currentDataSemester !== 121)
-      return alert(
-        `Saat ini UNJ berada di Semester 121, namun data KRS menunjukan pada Semester ${currentDataSemester}. Mohon unduh data terbaru.`
-      );
+    if (currentDataSemester !== CURRENT_SEMESTER)
+      return toast.error(`Data harus semester ${CURRENT_SEMESTER}`, {
+        description: `Saat ini UNJ berada di semester ${CURRENT_SEMESTER}, namun data KRS menunjukan pada semester ${currentDataSemester}. Mohon unduh data terbaru.`,
+      });
 
     const tableBodyTr = [...truthTable.find("tbody tr").clone()];
     tableBodyTr.pop();
 
     if (tableBodyTr.length < 1)
-      return alert("KRS anda masih kosong! Mohon diisi terlebih dahulu.");
+      return toast.error("KRS anda masih kosong.", {
+        description: "Mohon diisi terlebih dahulu.",
+      });
 
     if (tableBodyTr.every((el) => el.name !== "tr"))
-      return alert(
-        "Ada kesalahan membaca baris perbaris data mata kuliah dari tabel. Mohon hubungi pemilik web ini."
-      );
+      return toast.error("Kesalahan program web", {
+        description:
+          "Ada kesalahan membaca baris perbaris data mata kuliah dari tabel. Mohon hubungi pemilik web ini.",
+      });
 
     tableBodyTr.forEach((tr) => {
       const allTds = [
@@ -166,8 +193,7 @@ export const onSubmit =
       ];
 
       const currentRowData = {
-        subject: $(allTds[3]).text(),
-        credits: $(allTds[4]).text(),
+        subject: $(allTds[3]).text().trim(),
         lecturer: $(allTds[5]).text().trim(),
         location: trimSplitAndTrim($(allTds[6]).text()),
         time: trimSplitAndTrim($(allTds[7]).text()),
@@ -197,7 +223,10 @@ export const onSubmit =
       });
 
       if (preciseLocationInfo.length !== preciseTimeInfo.length) {
-        alert("Jumlah data lokasi tidak sama dengan jumlah data waktu!");
+        toast.error("Jumlah data lokasi tidak sama dengan jumlah data waktu", {
+          description:
+            "Hal ini harusnya tidak terjadi karena mengikuti dengan jumlah SKS. Jika anda tidak mengubah file secara manual, hubungi pembuat web ini.",
+        });
 
         throw new Error("Stop, stop, stop. Space n Time mismatch!");
       }
@@ -213,7 +242,7 @@ export const onSubmit =
 
     const restructureData = DAYTIME_REF.map((daytime) => {
       const currentDaySubjects = tempGreedArray
-        .filter((d) => d.time.day === daytime)
+        .filter((d) => d.time.day === daytime.label)
         .sort(
           (a, b) =>
             timeToNumber(a.time.startedAt) - timeToNumber(b.time.endedAt)
@@ -227,18 +256,36 @@ export const onSubmit =
           },
         }));
 
+      const startsAt = currentDaySubjects.at(0)?.time.startedAt ?? null;
+      const endsAt =
+        currentDaySubjects.at(currentDaySubjects.length - 1)?.time.endedAt ??
+        null;
+
       return {
-        day: daytime,
+        dayIndex: daytime.idx,
+        day: daytime.label,
         subjects: currentDaySubjects,
+        startsAt,
+        endsAt,
       };
-    });
+    })
+      .filter((d) => d.startsAt !== null)
+      .filter((d) => d.endsAt !== null);
+
+    console.log(restructureData);
 
     const validateRestructuredData = await studentStudies.safeParseAsync(
       restructureData
     );
 
     if (!validateRestructuredData.success)
-      return alert("Ada data yang tidak valid, mohon hubungi admin web ini.");
+      return toast.error(
+        "Ada data yang tidak valid sebelum proses finishing.",
+        {
+          description:
+            "Coba unduh data KRS lagi. Kalau masih bermasalah, hubungi pembuat web ini.",
+        }
+      );
 
     successCallback({
       studies: validateRestructuredData.data,

@@ -15,14 +15,13 @@ interface IStudies {
   studies: z.infer<typeof studentStudies> | null;
 }
 
-export const krsDataAtom = atomWithStorage<IStudentIdentity & IStudies>(
-  "krsInfoData",
-  {
-    nim: null,
-    name: null,
-    major: null,
-    faculty: null,
-    generation: null,
-    studies: null,
-  }
-);
+export type KRSType = IStudentIdentity & IStudies;
+
+export const krsDataAtom = atomWithStorage<KRSType>("krsInfoData", {
+  nim: null,
+  name: null,
+  major: null,
+  faculty: null,
+  generation: null,
+  studies: null,
+});
