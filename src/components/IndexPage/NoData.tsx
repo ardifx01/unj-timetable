@@ -64,8 +64,8 @@ export function NoData() {
         <p className="leading-7 [&:not(:first-child)]:mt-6 w-[95%] md:w-3/4 text-justify">
           Selamat datang 👋 pada web UNJ Timetable. Tujuan web ini yaitu
           memudahkan mahasiswa/i Universitas Negeri Jakarta dalam melihat Kartu
-          Rencana Studi (KRS) yang belum tersusun berdasarkan hari. Cara lengkap
-          akan dijelaskan dibawah form input ini ya 👇👇👇
+          Rencana Studi (KRS) yang belum tersusun berdasarkan hari. Namun perlu
+          di catat bahwa <u>selalu ikuti PJ</u> setiap matkul yaa.
         </p>
       </div>
 
@@ -112,6 +112,143 @@ export function NoData() {
           </Form>
         </CardContent>
       </Card>
+
+      <div className="w-full md:w-3/4 space-y-2 pb-28">
+        <h3 className="text-start scroll-m-20 text-2xl font-semibold tracking-tight">
+          Tutorial Cara Penggunaan
+        </h3>
+
+        <div className="pl-2.5 md:pl-4 space-y-4">
+          <p>
+            1. Buka Google Chrome, hal ini diperlukan karena akan mengunduh data
+            halaman KRS,{" "}
+            <a
+              className="font-semibold text-sky-900 dark:text-sky-500"
+              href="https://siakad.unj.ac.id/login"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              pelajari lebih lanjut
+            </a>
+            .
+          </p>
+
+          <p>
+            2. Kunjungi web{" "}
+            <a
+              className="font-semibold text-sky-900 dark:text-sky-500"
+              href="https://siakad.unj.ac.id/login"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Siakad UNJ
+            </a>
+            , login dengan identitas diri yang sudah diberikan.
+          </p>
+
+          <div className="flex flex-col items-center gap-2">
+            <p className="self-start">
+              3. Pilih menu <u>Akademik</u> lalu klik <u>Kartu Rencana Studi</u>{" "}
+              untuk mendapatkan Daftar Rencana Studi Semester, atau menuju link{" "}
+              <a
+                className="font-semibold text-sky-900 dark:text-sky-500"
+                href="https://siakad.unj.ac.id/index.php/krs"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                ini
+              </a>{" "}
+              supaya langsung menuju halaman yang dimaksud.
+            </p>
+
+            <img
+              src="/assets/001-pilih-menu-krs.png"
+              className="w-60 md:w-80"
+            />
+          </div>
+
+          <div className="flex flex-col items-center gap-4">
+            <p className="self-start">
+              4. Jika sudah berada di halaman memilih semester <i>121</i>{" "}
+              kemudian klik tombol "Proses".
+            </p>
+
+            <img
+              src="/assets/002-ambil-data-semester.png"
+              className="w-60 md:w-80"
+            />
+
+            <p>
+              Jika sudah klik, akan muncul tabel yang berjudul "Daftar Rencana
+              Studi Semester : 121" yang isinya sesuai dengan pilihan anda saat
+              melakukan pengisian KRS sebelum waktu perkuliahan dimulai.
+            </p>
+          </div>
+
+          <div className="flex flex-col items-center gap-4">
+            <p className="self-start">
+              5. Klik logo titik tiga berjejer ke bawah, posisinya ada di kanan
+              atas. Akan muncul logo unduh yang diperjelas dengan lingkaran,
+              foto terlampir.
+            </p>
+
+            <div className="flex flex-col md:flex-row gap-3 justify-center">
+              <img
+                src="/assets/003-pilih-titik-tiga.jpg"
+                className="w-60 md:w-80"
+              />
+
+              <img
+                src="/assets/004-klik-download.jpg"
+                className="w-60 md:w-80"
+              />
+            </div>
+
+            <p>
+              Akan muncul notifikasi bahwa unduhan sudah selesai, kurang lebih
+              begini tampilannya.
+            </p>
+
+            <img
+              src="/assets/005-selesai-download.jpg"
+              className="w-60 md:w-80"
+            />
+          </div>
+
+          <div className="flex flex-col items-center gap-4">
+            <p className="self-start">
+              6. Kembali ke web ini, klik input File Laman KRS dan kemudian
+              pilih file yang tadi sudah di unduh. File tersebut biasanya secara
+              otomatis memiliki nama "Siakad UNJ" pada folder Unduhan (atau
+              Download).
+            </p>
+
+            <div className="flex flex-col md:flex-row gap-3 justify-center">
+              <img
+                src="/assets/006-pilih-file-mhtml.jpg"
+                className="w-60 md:w-80"
+              />
+
+              <img
+                src="/assets/007-setelah-memilih.jpg"
+                className="w-60 md:w-80 h-full"
+              />
+            </div>
+
+            <p>Klik tombol Tambah File untuk melanjutkan.</p>
+
+            <img
+              src="/assets/008-tunggu-loading.jpg"
+              className="w-60 md:w-80"
+            />
+          </div>
+
+          <p>
+            7. Nikmati kemudahannya 🎉🎉🎉 Lakukan pengecekan ulang dan selalu
+            ikuti arahan dari PJ mata kuliah masing-masing!
+          </p>
+        </div>
+      </div>
     </>
   );
 }
