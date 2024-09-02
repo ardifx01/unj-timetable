@@ -1,5 +1,20 @@
 import type { KRSType } from "@/utils/atom";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
+import { krsDataAtom } from "@/utils/atom";
+import { useSetAtom } from "jotai";
+import { RESET } from "jotai/utils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { DateTime } from "luxon";
 import { useMemo } from "react";
 
@@ -18,6 +33,8 @@ const getCurrentDate = (dayIndex: number, isNextWeek: boolean) => {
 };
 
 export function Viewer({ data }: TProps) {
+  const setKRSData = useSetAtom(krsDataAtom);
+
   const isNextWeek = useMemo(() => {
     const lastDay = data.studies!.at(data.studies!.length - 1);
 
@@ -92,7 +109,7 @@ export function Viewer({ data }: TProps) {
           Jadwal Perkuliahan
         </h4>
 
-        <main className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-24 justify-center">
+        <main className="grid grid-cols-1 md:grid-cols-2 gap-3 justify-center">
           {data.studies?.map((study) => (
             <Card
               key={study.dayIndex}
@@ -162,6 +179,29 @@ export function Viewer({ data }: TProps) {
             </Card>
           ))}
         </main>
+
+        <div className="pt-3 pb-24 ">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive">Hapus Data KRS</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Apakah anda yakin?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Hal ini akan menghapus data KRS anda dari web ini. Anda masih
+                  bisa menambahkannya kembali setelah penghapusan data.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Batal</AlertDialogCancel>
+                <AlertDialogAction onClick={() => setKRSData(RESET)}>
+                  Lanjutkan
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
       </section>
     </>
   );
