@@ -143,7 +143,7 @@ export function NoData() {
             >
               github repo
             </a>{" "}
-            if you are nerd enough.
+            if you are curious.
           </small>
         </CardFooter>
       </Card>
