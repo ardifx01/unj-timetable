@@ -139,6 +139,7 @@ export function NoData() {
             <a
               className="underline"
               href="https://github.com/reacto11mecha/unj-timetable"
+              target="_blank"
               rel="noopener noreferrer"
             >
               github repo
