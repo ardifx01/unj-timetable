@@ -4,6 +4,7 @@ import { z } from "zod";
 import { studentStudies } from "./submit-handler";
 
 interface IStudentIdentity {
+  autoScroll: boolean;
   nim: string | null;
   name: string | null;
   major: string | null;
@@ -18,6 +19,7 @@ interface IStudies {
 export type KRSType = IStudentIdentity & IStudies;
 
 export const krsDataAtom = atomWithStorage<KRSType>("krsInfoData", {
+  autoScroll: true,
   nim: null,
   name: null,
   major: null,

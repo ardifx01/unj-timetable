@@ -245,7 +245,7 @@ export function NoData() {
 
           <p>
             7. Nikmati kemudahannya 🎉🎉🎉 Lakukan pengecekan ulang dan selalu
-            ikuti arahan dari PJ mata kuliah masing-masing!
+            ikuti arahan dari PJ mata kuliah masing-masing yaa!
           </p>
         </div>
       </div>

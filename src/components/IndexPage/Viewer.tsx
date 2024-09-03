@@ -124,12 +124,13 @@ export function Viewer({ data }: TProps) {
                   </span>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="px-2">
+              <CardContent className="px-2 overflow-x-auto">
                 <table className="table-auto w-full">
                   <thead className="bg-blue-600 dark:bg-blue-800 text-gray-100 text-lg">
                     <tr className="h-10">
                       <th className="text-start pl-3">JAM</th>
                       <th className="text-center">Matkul</th>
+                      <th className="text-center">Dosen</th>
                       <th className="text-center">Lokasi</th>
                       <th className="text-end pr-3">Waktu</th>
                     </tr>
@@ -146,6 +147,10 @@ export function Viewer({ data }: TProps) {
 
                         <td className="w-[25%] md:w-fit text-center">
                           {s.subject}
+                        </td>
+
+                        <td className="w-[25%] md:w-fit text-center">
+                          {s.lecturer}
                         </td>
 
                         <td className="text-center">

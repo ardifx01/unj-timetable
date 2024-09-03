@@ -37,9 +37,12 @@
     "tailwindcss": "^3.4.10",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.5.4",
+    "workbox-window": "^7.1.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/luxon": "^3.4.2"
+    "@types/luxon": "^3.4.2",
+    "@vite-pwa/astro": "^0.4.0",
+    "vite-plugin-pwa": "^0.20.3"
   }
 }
