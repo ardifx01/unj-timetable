@@ -47,10 +47,11 @@ export function NoData() {
 
   const submitCallback = useCallback(
     onSubmit((data) =>
-      setKrsData({
+      setKrsData((prev) => ({
+        ...prev,
         ...data.studentInfo,
         studies: data.studies,
-      })
+      }))
     ),
     []
   );
