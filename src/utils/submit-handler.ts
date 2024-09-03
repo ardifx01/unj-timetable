@@ -272,8 +272,6 @@ export const onSubmit =
       .filter((d) => d.startsAt !== null)
       .filter((d) => d.endsAt !== null);
 
-    console.log(restructureData);
-
     const validateRestructuredData = await studentStudies.safeParseAsync(
       restructureData
     );

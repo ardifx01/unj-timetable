@@ -18,7 +18,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardTitle,
+  CardHeader,
+  CardFooter,
+} from "@/components/ui/card";
 
 const OneMeg = 3_000_000;
 
@@ -114,13 +120,41 @@ export function NoData() {
         </CardContent>
       </Card>
 
-      <div className="w-full md:w-3/4 space-y-2 pb-28">
+      <Card className="w-full md:w-3/4 rounded-xl bg-green-300 dark:bg-green-800">
+        <CardHeader>
+          <CardTitle className="text-green-950 dark:text-green-200">
+            Tenang 🚦🚦🚦
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-justify">
+            Web ini memproses datamu hanya pada perangkat saat ini aja yaa, ga
+            ada data yang di kirim keluar kok 🥳🥳🥳.
+          </p>
+        </CardContent>
+
+        <CardFooter>
+          <small>
+            Here's the{" "}
+            <a
+              className="underline"
+              href="https://github.com/reacto11mecha/unj-timetable"
+              rel="noopener noreferrer"
+            >
+              github repo
+            </a>{" "}
+            if you are nerd enough.
+          </small>
+        </CardFooter>
+      </Card>
+
+      <div className="w-full md:w-3/4 space-y-2">
         <h3 className="text-start scroll-m-20 text-2xl font-semibold tracking-tight">
           Tutorial Cara Penggunaan
         </h3>
 
-        <div className="pl-2.5 md:pl-4 space-y-4">
-          <p>
+        <div className="pl-2.5 pr-1 md:pl-4 md:pr-0 space-y-4">
+          <p className="text-justify">
             1. Buka Google Chrome, hal ini diperlukan karena akan mengunduh data
             halaman KRS,{" "}
             <a
@@ -134,7 +168,7 @@ export function NoData() {
             .
           </p>
 
-          <p>
+          <p className="text-justify">
             2. Kunjungi web{" "}
             <a
               className="font-semibold text-sky-900 dark:text-sky-500"
@@ -148,7 +182,7 @@ export function NoData() {
           </p>
 
           <div className="flex flex-col items-center gap-2">
-            <p className="self-start">
+            <p className="self-start text-justify">
               3. Pilih menu <u>Akademik</u> lalu klik <u>Kartu Rencana Studi</u>{" "}
               untuk mendapatkan Daftar Rencana Studi Semester, atau menuju link{" "}
               <a
@@ -169,7 +203,7 @@ export function NoData() {
           </div>
 
           <div className="flex flex-col items-center gap-4">
-            <p className="self-start">
+            <p className="self-start text-justify">
               4. Jika sudah berada di halaman memilih semester <i>121</i>{" "}
               kemudian klik tombol "Proses".
             </p>
@@ -179,7 +213,7 @@ export function NoData() {
               className="w-60 md:w-80"
             />
 
-            <p>
+            <p className="text-justify">
               Jika sudah klik, akan muncul tabel yang berjudul "Daftar Rencana
               Studi Semester : 121" yang isinya sesuai dengan pilihan anda saat
               melakukan pengisian KRS sebelum waktu perkuliahan dimulai.
@@ -187,7 +221,7 @@ export function NoData() {
           </div>
 
           <div className="flex flex-col items-center gap-4">
-            <p className="self-start">
+            <p className="self-start text-justify">
               5. Klik logo titik tiga berjejer ke bawah, posisinya ada di kanan
               atas. Akan muncul logo unduh yang diperjelas dengan lingkaran,
               foto terlampir.
@@ -217,7 +251,7 @@ export function NoData() {
           </div>
 
           <div className="flex flex-col items-center gap-4">
-            <p className="self-start">
+            <p className="self-start text-justify">
               6. Kembali ke web ini, klik input File Laman KRS dan kemudian
               pilih file yang tadi sudah di unduh. File tersebut biasanya secara
               otomatis memiliki nama "Siakad UNJ" pada folder Unduhan (atau
@@ -244,12 +278,66 @@ export function NoData() {
             />
           </div>
 
-          <p>
+          <p className="text-justify">
             7. Nikmati kemudahannya 🎉🎉🎉 Lakukan pengecekan ulang dan selalu
             ikuti arahan dari PJ mata kuliah masing-masing yaa!
           </p>
         </div>
       </div>
+
+      <div className="w-full md:w-3/4 space-y-2 pt-5">
+        <h3 className="text-start scroll-m-20 text-2xl font-semibold tracking-tight">
+          Fitur-Fitur Yang Tersedia
+        </h3>
+
+        <div className="pl-2.5 pr-1 md:pl-4 md:pr-0 space-y-4">
+          <p className="text-justify">
+            1. Mengubah data KRS dari web siakad menjadi jadwal perkuliahan yang
+            otomatis tersusun berdasarkan hari dan mudah di mengerti.
+          </p>
+
+          <p className="text-justify">
+            2. Memilih file data hanya sekali, jika sudah pernah menentukan file
+            maka akan terus ditampilkan kecuali data dihapus.
+          </p>
+
+          <p className="text-justify">
+            3. Web ini dapat di instal sebagai aplikasi dengan cara menekan{" "}
+            <u>titik tiga pojok kanan atas</u>, pilih <i>Add to Home Screen</i>,
+            lalu klik <i>Install</i>. Akan ada kalanya muncul prompt otomatis
+            dari Chrome supaya bisa instal, tapi hasilnya tetap sama.
+          </p>
+
+          <p className="text-justify">
+            4. Karena dapat di instal, web ini bisa bekerja secara{" "}
+            <i>offline</i> tanpa perlu terhubung ke internet.
+          </p>
+
+          <div className="space-y-3 *:text-justify">
+            <p>
+              5. Fitur auto scroll pada saat web ini akan secara otomatis scroll
+              ke bagian sesuai hari.
+            </p>
+
+            <p>
+              Jika anda membuka web ini pada pagi hari di hari senin maka akan
+              otomatis scroll pada bagian hari senin. Masih di hari yang sama
+              namun setelah jam selesai perkuliahan maka akan otomatis scroll ke
+              hari selasa dan begitu seterusnya.
+            </p>
+
+            <p>
+              Namun ketika hari Jum'at dan jam sudah menunjukan jadwal
+              perkuliahan telah usai maka akan otomatis scroll ke hari senin.
+              Siklus ini berulang terus menerus.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <p className="mt-5 pb-20 text-center w-[80%] md:w-full">
+        Terima kasih sudah menggunakan, semangat selalu yaa 🤗💓
+      </p>
     </>
   );
 }

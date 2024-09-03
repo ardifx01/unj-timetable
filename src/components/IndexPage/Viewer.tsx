@@ -1,7 +1,7 @@
 import type { KRSType } from "@/utils/atom";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { krsDataAtom } from "@/utils/atom";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { RESET } from "jotai/utils";
 import {
   AlertDialog,
@@ -14,9 +14,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { DateTime } from "luxon";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 type TProps = { data: NonNullable<KRSType> };
 
@@ -31,6 +33,23 @@ const getCurrentDate = (dayIndex: number, isNextWeek: boolean) => {
 
   return time.toLocaleString(DateTime.DATE_FULL);
 };
+
+function AutoScroll() {
+  const [allData, setData] = useAtom(krsDataAtom);
+
+  return (
+    <div className="flex items-center space-x-2">
+      <Switch
+        id="auto-scroll"
+        checked={allData.autoScroll}
+        onCheckedChange={(autoScroll) =>
+          setData((prev) => ({ ...prev, autoScroll }))
+        }
+      />
+      <Label htmlFor="auto-scroll">Scroll Otomatis</Label>
+    </div>
+  );
+}
 
 export function Viewer({ data }: TProps) {
   const setKRSData = useSetAtom(krsDataAtom);
@@ -50,6 +69,62 @@ export function Viewer({ data }: TProps) {
         }) <= DateTime.now().setZone()
     );
   }, []);
+
+  useEffect(() => {
+    const autoScrollExecution = () => {
+      const now = DateTime.now();
+
+      if (isNextWeek) {
+        const firstDataOfArray = data.studies!.at(0);
+
+        const targetCard = document.querySelector(
+          `#day-${firstDataOfArray?.dayIndex}`
+        );
+
+        targetCard?.scrollIntoView({
+          behavior: "smooth",
+        });
+
+        return;
+      }
+
+      const { endsAt, dayIndex } = data.studies!.find(
+        (schedule) => schedule.dayIndex === now.weekday - 1
+      )!;
+      const [hour, minutes] = endsAt.split(":");
+
+      const isTheEndOfTheDay =
+        DateTime.now().set({
+          hour: parseInt(hour),
+          minute: parseInt(minutes),
+        }) <= now;
+
+      if (isTheEndOfTheDay) {
+        const currentDayIndex = data.studies!.findIndex(
+          (schedule) => schedule.dayIndex === dayIndex
+        );
+        const nextDayData = data.studies!.at(currentDayIndex + 1);
+
+        const targetCard = document.querySelector(
+          `#day-${nextDayData!.dayIndex}`
+        );
+
+        targetCard?.scrollIntoView({
+          behavior: "smooth",
+        });
+
+        return;
+      }
+
+      const targetCard = document.querySelector(`#day-${now.weekday - 1}`);
+
+      targetCard?.scrollIntoView({
+        behavior: "smooth",
+      });
+    };
+
+    if (data.autoScroll) autoScrollExecution();
+  }, [isNextWeek]);
 
   return (
     <>
@@ -102,6 +177,31 @@ export function Viewer({ data }: TProps) {
             </table>
           </div>
         </div>
+
+        <div className="flex gap-3 pt-1">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive">Hapus Data KRS</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Apakah anda yakin?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Hal ini akan menghapus data KRS anda dari web ini. Anda masih
+                  bisa menambahkannya kembali setelah penghapusan data.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Batal</AlertDialogCancel>
+                <AlertDialogAction onClick={() => setKRSData(RESET)}>
+                  Lanjutkan
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          <AutoScroll />
+        </div>
       </section>
 
       <section className="space-y-1.5 w-full">
@@ -109,7 +209,7 @@ export function Viewer({ data }: TProps) {
           Jadwal Perkuliahan
         </h4>
 
-        <main className="grid grid-cols-1 md:grid-cols-2 gap-3 justify-center">
+        <main className="grid grid-cols-1 md:grid-cols-2 gap-3 justify-center pb-24">
           {data.studies?.map((study) => (
             <Card
               key={study.dayIndex}
@@ -184,29 +284,6 @@ export function Viewer({ data }: TProps) {
             </Card>
           ))}
         </main>
-
-        <div className="pt-3 pb-24 ">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive">Hapus Data KRS</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Apakah anda yakin?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Hal ini akan menghapus data KRS anda dari web ini. Anda masih
-                  bisa menambahkannya kembali setelah penghapusan data.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Batal</AlertDialogCancel>
-                <AlertDialogAction onClick={() => setKRSData(RESET)}>
-                  Lanjutkan
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
       </section>
     </>
   );
