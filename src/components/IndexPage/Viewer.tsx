@@ -3,6 +3,7 @@ import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { krsDataAtom } from "@/utils/atom";
 import { useAtom, useSetAtom } from "jotai";
 import { RESET } from "jotai/utils";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +20,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { DateTime } from "luxon";
 import { useEffect, useMemo } from "react";
+import type { Construction } from "lucide-react";
 
 type TProps = { data: NonNullable<KRSType> };
 
@@ -72,55 +74,117 @@ export function Viewer({ data }: TProps) {
 
   useEffect(() => {
     const autoScrollExecution = () => {
-      const now = DateTime.now();
+      try {
+        const now = DateTime.now();
 
-      if (isNextWeek) {
-        const firstDataOfArray = data.studies!.at(0);
+        if (isNextWeek) {
+          const firstDataOfArray = data.studies!.at(0);
 
-        const targetCard = document.querySelector(
-          `#day-${firstDataOfArray?.dayIndex}`
-        );
+          const targetCard = document.querySelector(
+            `#day-${firstDataOfArray?.dayIndex}`
+          );
+
+          targetCard?.scrollIntoView({
+            behavior: "smooth",
+          });
+
+          return;
+        }
+
+        const currentDayIndex = data.studies?.find(
+          (schedule) => schedule.dayIndex === now.weekday - 1
+        )!;
+
+        if (!currentDayIndex) {
+          const previousIndex = data.studies!.reduce((acc, day) => {
+            if (day.dayIndex <= now.weekday - 1 && day.dayIndex > acc)
+              return day.dayIndex;
+
+            return acc;
+          }, 0);
+
+          if (previousIndex === 0) {
+            const firstDataOfArray = data.studies!.at(0);
+
+            const targetCard = document.querySelector(
+              `#day-${firstDataOfArray?.dayIndex}`
+            );
+
+            targetCard?.scrollIntoView({
+              behavior: "smooth",
+            });
+
+            return;
+          }
+
+          const nextDataIndex = data.studies!.find(
+            (day) => day.dayIndex > previousIndex
+          );
+
+          if (!nextDataIndex) {
+            const lastDataOfArray = data.studies!.at(data.studies!.length - 1);
+
+            const targetCard = document.querySelector(
+              `#day-${lastDataOfArray?.dayIndex}`
+            );
+
+            targetCard?.scrollIntoView({
+              behavior: "smooth",
+            });
+
+            return;
+          }
+
+          const targetCard = document.querySelector(
+            `#day-${nextDataIndex?.dayIndex}`
+          );
+
+          targetCard?.scrollIntoView({
+            behavior: "smooth",
+          });
+
+          return;
+        }
+
+        const { endsAt, dayIndex } = currentDayIndex;
+        const [hour, minutes] = endsAt.split(":");
+
+        const isTheEndOfTheDay =
+          DateTime.now().set({
+            hour: parseInt(hour),
+            minute: parseInt(minutes),
+          }) <= now;
+
+        if (isTheEndOfTheDay) {
+          const currentDayIndex = data.studies!.findIndex(
+            (schedule) => schedule.dayIndex === dayIndex
+          );
+          const nextDayData = data.studies!.at(currentDayIndex + 1);
+
+          const targetCard = document.querySelector(
+            `#day-${nextDayData!.dayIndex}`
+          );
+
+          targetCard?.scrollIntoView({
+            behavior: "smooth",
+          });
+
+          return;
+        }
+
+        const targetCard = document.querySelector(`#day-${now.weekday - 1}`);
 
         targetCard?.scrollIntoView({
           behavior: "smooth",
         });
+      } catch (e) {
+        console.error(e);
 
-        return;
-      }
-
-      const { endsAt, dayIndex } = data.studies!.find(
-        (schedule) => schedule.dayIndex === now.weekday - 1
-      )!;
-      const [hour, minutes] = endsAt.split(":");
-
-      const isTheEndOfTheDay =
-        DateTime.now().set({
-          hour: parseInt(hour),
-          minute: parseInt(minutes),
-        }) <= now;
-
-      if (isTheEndOfTheDay) {
-        const currentDayIndex = data.studies!.findIndex(
-          (schedule) => schedule.dayIndex === dayIndex
-        );
-        const nextDayData = data.studies!.at(currentDayIndex + 1);
-
-        const targetCard = document.querySelector(
-          `#day-${nextDayData!.dayIndex}`
-        );
-
-        targetCard?.scrollIntoView({
-          behavior: "smooth",
+        toast.error("Gagal mengaktifkan auto scroll", {
+          description:
+            "Hal ini terjadi karena kesalahan program, anda masih bisa tetap memakai tetapi fitur ini dimatikan. Mohon untuk memberitakan kesalahan ke pembuat web ini.",
         });
-
-        return;
       }
-
-      const targetCard = document.querySelector(`#day-${now.weekday - 1}`);
-
-      targetCard?.scrollIntoView({
-        behavior: "smooth",
-      });
     };
 
     if (data.autoScroll) autoScrollExecution();
