@@ -289,12 +289,15 @@ export function Viewer({ data }: TProps) {
               id={`day-${study.dayIndex}`}
               className="w-full dark:border-sm dark:bg-neutral-900 dark:border-neutral-900"
             >
-              <CardHeader>
-                <CardTitle className="text-xl md:text-2xl">
+              <CardHeader className="*:text-xl *:md:text-2xl">
+                <CardTitle className="print:hidden">
                   {study.day},{" "}
                   <span className="font-normal">
                     {getCurrentDate(study.dayIndex, isNextWeek)}
                   </span>
+                </CardTitle>
+                <CardTitle className="print:block hidden">
+                  {study.day}
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-2 overflow-x-auto">
