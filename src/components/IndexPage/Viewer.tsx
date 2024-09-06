@@ -20,7 +20,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { DateTime } from "luxon";
 import { useEffect, useMemo } from "react";
-import type { Construction } from "lucide-react";
+import { FileDown } from "lucide-react";
 
 type TProps = { data: NonNullable<KRSType> };
 
@@ -242,29 +242,38 @@ export function Viewer({ data }: TProps) {
           </div>
         </div>
 
-        <div className="flex gap-3 pt-1">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive">Hapus Data KRS</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Apakah anda yakin?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Hal ini akan menghapus data KRS anda dari web ini. Anda masih
-                  bisa menambahkannya kembali setelah penghapusan data.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Batal</AlertDialogCancel>
-                <AlertDialogAction onClick={() => setKRSData(RESET)}>
-                  Lanjutkan
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+        <div className="flex flex-col md:flex-row gap-3 pt-1 print:hidden">
+          <div className="flex flex-row justify-center gap-3 md:w-fit">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive">Hapus Data KRS</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Apakah anda yakin?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Hal ini akan menghapus data KRS anda dari web ini. Anda
+                    masih bisa menambahkannya kembali setelah penghapusan data.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Batal</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => setKRSData(RESET)}>
+                    Lanjutkan
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
 
-          <AutoScroll />
+            <Button variant="outline" onClick={() => window.print()}>
+              <FileDown className="mr-2 h-4 w-4" />
+              Unduh sebagai PDF
+            </Button>
+          </div>
+
+          <div className="flex justify-center md:justify-normal items-center">
+            <AutoScroll />
+          </div>
         </div>
       </section>
 
@@ -273,7 +282,7 @@ export function Viewer({ data }: TProps) {
           Jadwal Perkuliahan
         </h4>
 
-        <main className="grid grid-cols-1 md:grid-cols-2 gap-3 justify-center pb-24">
+        <main className="grid print:grid-cols-1 grid-cols-1 md:grid-cols-2 gap-3 justify-center pb-24">
           {data.studies?.map((study) => (
             <Card
               key={study.dayIndex}
