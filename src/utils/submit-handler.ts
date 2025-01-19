@@ -4,7 +4,7 @@ import { toast } from "sonner";
 
 import { z } from "zod";
 
-const CURRENT_SEMESTER = 121;
+const CURRENT_SEMESTER = 122;
 
 const headerScheme = z.object({
   "snapshot-content-location": z.string().url(),
