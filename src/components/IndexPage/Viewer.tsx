@@ -1,6 +1,6 @@
-import type { KRSType } from "@/utils/atom";
+import type { KRSType } from "@/lib/atom";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import { krsDataAtom } from "@/utils/atom";
+import { krsDataAtom } from "@/lib/atom";
 import { useAtom, useSetAtom } from "jotai";
 import { RESET } from "jotai/utils";
 import { toast } from "sonner";
@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { DateTime } from "luxon";
 import { useEffect, useMemo } from "react";
 import { FileDown } from "lucide-react";
+import { CURRENT_SEMESTER } from "@/lib/submit-handler";
 
 type TProps = { data: NonNullable<KRSType> };
 
@@ -70,6 +71,22 @@ export function Viewer({ data }: TProps) {
           minute: parseInt(minute),
         }) <= DateTime.now().setZone()
     );
+  }, []);
+
+  // use effect dibawah ini akan melakukan validasi
+  // apakah data yang di input sesuai dengan variabel
+  // CURRENT_SEMESTER atau tidak.
+  useEffect(() => {
+    if (!data.currentSemester) {
+      setKRSData(RESET);
+      return;
+    }
+
+    const savedSemester = parseInt(data.currentSemester);
+
+    if (savedSemester !== CURRENT_SEMESTER) {
+      setKRSData(RESET);
+    }
   }, []);
 
   useEffect(() => {

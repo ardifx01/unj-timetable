@@ -1,6 +1,6 @@
 import { useAtomValue } from "jotai";
 import { NoData } from "./NoData";
-import { krsDataAtom } from "@/utils/atom";
+import { krsDataAtom } from "@/lib/atom";
 import { Viewer } from "./Viewer";
 
 export function IndexPage() {

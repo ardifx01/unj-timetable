@@ -4,8 +4,8 @@ import { useSetAtom } from "jotai";
 import { useForm } from "react-hook-form";
 import { LoaderPinwheel } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { onSubmit } from "@/utils/submit-handler";
-import { krsDataAtom } from "@/utils/atom";
+import { CURRENT_SEMESTER, onSubmit } from "@/lib/submit-handler";
+import { krsDataAtom } from "@/lib/atom";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -57,6 +57,7 @@ export function NoData() {
         ...prev,
         ...data.studentInfo,
         studies: data.studies,
+        currentSemester: String(CURRENT_SEMESTER),
       }))
     ),
     []

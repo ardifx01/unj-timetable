@@ -4,7 +4,10 @@ import { toast } from "sonner";
 
 import { z } from "zod";
 
-const CURRENT_SEMESTER = 122;
+// Dibawah ini adalah variabel keramat yang mengendalikan
+// validasi dan kemutakhiran data, dimohon untuk melakukan
+// pembaruan angka sesuai kondisi yang terjadi di lapangan.
+export const CURRENT_SEMESTER = 122;
 
 const headerScheme = z.object({
   "snapshot-content-location": z.string().url(),
