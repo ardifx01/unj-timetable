@@ -13,7 +13,7 @@ Untuk cara penggunaan bagi end user, silahkan kunjungi https://timetable.rmecha.
 
 ## Kesini karena webnya bang
 
-Sesuai yang tercantum, web ini mengolah data secara lokal pada perangkat pengunjung dan disimpan pada penyimpanan mereka. Semua pekerjaan berat terletak pada file [`submit-handler.ts`](./src/utils/submit-handler.ts), file yang akan berjalan ketika tombol `Tambah File` di tekan.
+Sesuai yang tercantum, web ini mengolah data secara lokal pada perangkat pengunjung dan disimpan pada penyimpanan mereka. Semua pekerjaan berat terletak pada file [`submit-handler.ts`](./src/lib/submit-handler.ts), file yang akan berjalan ketika tombol `Tambah File` di tekan.
 
 Runtutan teknis pembacaan file KRS kurang lebih seperti ini.
 

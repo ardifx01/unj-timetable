@@ -4,8 +4,8 @@ import { useSetAtom } from "jotai";
 import { useForm } from "react-hook-form";
 import { LoaderPinwheel } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { onSubmit } from "@/utils/submit-handler";
-import { krsDataAtom } from "@/utils/atom";
+import { CURRENT_SEMESTER, onSubmit } from "@/lib/submit-handler";
+import { krsDataAtom } from "@/lib/atom";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -57,6 +57,7 @@ export function NoData() {
         ...prev,
         ...data.studentInfo,
         studies: data.studies,
+        currentSemester: String(CURRENT_SEMESTER),
       }))
     ),
     []
@@ -205,8 +206,10 @@ export function NoData() {
 
           <div className="flex flex-col items-center gap-4">
             <p className="self-start text-justify">
-              4. Jika sudah berada di halaman memilih semester <i>121</i>{" "}
-              kemudian klik tombol "Proses".
+              4. Jika sudah berada di halaman memilih semester{" "}
+              <i>{CURRENT_SEMESTER}</i> kemudian klik tombol "Proses". Gambar di
+              bawah ini dan seterusnya hanya berfungsi sebagai contoh saja,
+              mohon untuk tetap memilih semester {CURRENT_SEMESTER}.
             </p>
 
             <img
@@ -216,8 +219,9 @@ export function NoData() {
 
             <p className="text-justify">
               Jika sudah klik, akan muncul tabel yang berjudul "Daftar Rencana
-              Studi Semester : 121" yang isinya sesuai dengan pilihan anda saat
-              melakukan pengisian KRS sebelum waktu perkuliahan dimulai.
+              Studi Semester : {CURRENT_SEMESTER}" yang isinya sesuai dengan
+              pilihan anda saat melakukan pengisian KRS sebelum waktu
+              perkuliahan dimulai.
             </p>
           </div>
 
