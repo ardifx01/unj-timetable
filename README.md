@@ -11,6 +11,8 @@ Projek ini merupakan sequel dari [jadwal-ssg](https://github.com/reacto11mecha/j
 
 Untuk cara penggunaan bagi end user, silahkan kunjungi https://timetable.rmecha.my.id/, sudah dijelaskan fitur dan cara penggunannya.
 
+> Perlu file contoh? Download file raw di [gist ini](https://gist.github.com/reacto11mecha/c3db0fec2114affa31eaa55f7b1f92fd). Klik tombol raw, lalu Ctrl + S untuk menyimpan filenya.
+
 ## Kesini karena webnya bang
 
 Sesuai yang tercantum, web ini mengolah data secara lokal pada perangkat pengunjung dan disimpan pada penyimpanan mereka. Semua pekerjaan berat terletak pada file [`submit-handler.ts`](./src/lib/submit-handler.ts), file yang akan berjalan ketika tombol `Tambah File` di tekan.
